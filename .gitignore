@@ -1,0 +1,23 @@
+#System and other files 
+.DS_Store
+.idea/
+*.kate-swp
+*.desktop
+*.thumb
+*.sublime*
+
+#Modules and production folders
+build/
+dist/
+node_modules/
+.cache/
+
+#Some logs
+logs
+*.log
+npm-debug.log*
+
+*.seed
+coverage
+.npm
+.tmp
