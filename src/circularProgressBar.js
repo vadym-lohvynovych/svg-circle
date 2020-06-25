@@ -19,7 +19,7 @@ export function circularProgressBar(userOptions) {
   };
 
   let value = normalizeValue(options.value, options.minValue, options.maxValue);
-  let valueInterval = null;
+  let animationFrame = null;
 
   const parent = document.createElement('div');
   const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
@@ -60,38 +60,29 @@ export function circularProgressBar(userOptions) {
   options.showValue && parent.appendChild(text);
 
   parent.setValue = (newValue) => {
-    clearInterval(valueInterval);
+    cancelAnimationFrame(animationFrame);
 
     const normalizedValue = normalizeValue(newValue, options.minValue, options.maxValue);
-    const fps = 60;
-    const duration = Math.abs(normalizedValue - value) * 10;
-    const ticks = (fps / 100) * (duration / 1000) * 100;
-    const tickValue = Math.abs(normalizedValue - value) / ticks;
+
     const isIncrementing = normalizedValue > value;
 
     if (value === normalizedValue) return;
 
-    valueInterval = setInterval(() => {
+    const update = () => {
       if (isIncrementing) {
-        value += tickValue;
+        value += 1;
         updateValue(value > normalizedValue ? normalizedValue : value);
-        value > normalizedValue && clearInterval(valueInterval);
+        animationFrame = requestAnimationFrame(update);
+        value > normalizedValue && cancelAnimationFrame(animationFrame);
       } else {
-        value -= tickValue;
+        value -= 1;
         updateValue(value < normalizedValue ? normalizedValue : value);
-        value < normalizedValue && clearInterval(valueInterval);
+        animationFrame = requestAnimationFrame(update);
+        value < normalizedValue && cancelAnimationFrame(animationFrame);
       }
-    }, duration / fps);
+    };
 
-    // const updateValue = () => {
-    //   if (value !== normalizedValue) {
-    //     value = normalizedValue > value ? value + 1 : value - 1;
-    //     updateValue(value);
-    //     requestAnimationFrame(updateValue);
-    //   }
-    // };
-
-    // requestAnimationFrame(updateValue);
+    requestAnimationFrame(update);
   };
 
   parent.getValue = () => value;
