@@ -64,27 +64,30 @@ export function circularProgressBar(userOptions) {
   parent.setValue = (newValue) => {
     cancelAnimationFrame(animationFrame);
 
-    const normalizedValue = normalizeValue(newValue, options.minValue, options.maxValue);
+    const finalValue = normalizeValue(newValue, options.minValue, options.maxValue);
 
-    const isIncrementing = normalizedValue > value;
+    const isIncrementing = finalValue > value;
 
-    if (value === normalizedValue) return;
+    if (value === finalValue) return;
 
-    const update = () => {
-      if (isIncrementing) {
-        value += 1;
-        updateValue(value > normalizedValue ? normalizedValue : value);
-        animationFrame = requestAnimationFrame(update);
-        value > normalizedValue && cancelAnimationFrame(animationFrame);
+    const updateFrame = () => {
+      const nextValue = isIncrementing ? value + 1 : value - 1;
+      const shouldStop = isIncrementing ? nextValue > finalValue : nextValue < finalValue;
+
+      if ((isIncrementing && nextValue > finalValue) || (!isIncrementing && nextValue < finalValue)) {
+        value = finalValue;
       } else {
-        value -= 1;
-        updateValue(value < normalizedValue ? normalizedValue : value);
-        animationFrame = requestAnimationFrame(update);
-        value < normalizedValue && cancelAnimationFrame(animationFrame);
+        value = nextValue;
+      }
+
+      updateValue(value);
+
+      if (!shouldStop) {
+        animationFrame = requestAnimationFrame(updateFrame);
       }
     };
 
-    requestAnimationFrame(update);
+    requestAnimationFrame(updateFrame);
   };
 
   parent.getValue = () => value;
