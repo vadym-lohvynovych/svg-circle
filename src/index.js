@@ -1,4 +1,4 @@
-import { circularProgressBar } from './circularProgressBar';
+import { circularProgressBar } from './circularProgress/circularProgressBar';
 
 const progressBar = circularProgressBar({
   fontSize: '1.4em',
