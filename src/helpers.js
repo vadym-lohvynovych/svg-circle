@@ -1,5 +1,5 @@
 function getSvgStaticAttributes(size) {
-  const strokeWidth = (size / 100) * 6;
+  const strokeWidth = (size / 100) * 5;
   const radius = size / 2 - strokeWidth;
   const perimeter = 2 * Math.PI * radius;
 
