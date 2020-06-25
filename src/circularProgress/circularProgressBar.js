@@ -22,7 +22,7 @@ export function circularProgressBar(userOptions) {
   const parent = document.createElement('div');
   const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
   const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-  const text = options.showValue ? document.createElement('span') : null;
+  let text = null;
 
   let value = normalizeValue(options.value, options.minValue, options.maxValue);
   let animationFrame = null;
@@ -31,14 +31,17 @@ export function circularProgressBar(userOptions) {
   parent.style.width = options.size + 'px';
   parent.style.height = options.size + 'px';
 
+  parent.appendChild(svg);
+  svg.appendChild(circle);
+
   if (options.showValue) {
+    text = document.createElement('span');
     text.style.fontSize = options.fontSize;
     text.style.color = options.valueColor;
+    parent.appendChild(text);
   }
 
   updateValue(value);
-
-  parent.classList.add('circular-progress');
 
   const svgAttributes = {
     width: options.size,
@@ -57,10 +60,6 @@ export function circularProgressBar(userOptions) {
 
   setElementAttributes(svg, svgAttributes);
   setElementAttributes(circle, circleAttributes);
-
-  svg.appendChild(circle);
-  parent.appendChild(svg);
-  options.showValue && parent.appendChild(text);
 
   parent.setValue = (newValue) => {
     cancelAnimationFrame(animationFrame);
