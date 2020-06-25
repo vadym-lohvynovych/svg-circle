@@ -2,8 +2,9 @@ import { circularProgressBar } from './circularProgressBar';
 
 const progressBar = circularProgressBar({
   fontSize: '1.4em',
-  color: 'indigo',
-  valueColor: '#737373'
+  color: 'lightblue',
+  valueColor: '#737993',
+  display: (value) => value + '%'
 });
 
 document.getElementById('root').appendChild(progressBar);
@@ -13,7 +14,7 @@ document.getElementById('root').appendChild(progressBar);
 //   if (progressBar.getValue() >= 100) {
 //     clearInterval(count);
 //   }
-// }, 15);
+// }, 10);
 
 setTimeout(() => {
   progressBar.setValue(100);

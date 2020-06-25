@@ -17,16 +17,19 @@ export function circularProgressBar(userOptions) {
     ...defaultOptions,
     ...userOptions
   };
-
-  let value = normalizeValue(options.value, options.minValue, options.maxValue);
-  let animationFrame = null;
+  const { strokeWidth, radius, perimeter } = getSvgStaticAttributes(options.size);
 
   const parent = document.createElement('div');
   const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
   const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
   const text = options.showValue ? document.createElement('span') : null;
 
-  const { strokeWidth, radius, perimeter } = getSvgStaticAttributes(options.size);
+  let value = normalizeValue(options.value, options.minValue, options.maxValue);
+  let animationFrame = null;
+
+  parent.classList.add('circular-progress');
+  parent.style.width = options.size + 'px';
+  parent.style.height = options.size + 'px';
 
   if (options.showValue) {
     text.style.fontSize = options.fontSize;
@@ -92,7 +95,7 @@ export function circularProgressBar(userOptions) {
   function updateValue(value) {
     svg.setAttribute('style', getStrokeDasharrayStyle(getLineWidth(perimeter, value), perimeter));
     if (options.showValue) {
-      text.innerHTML = Math.round(value);
+      text.innerHTML = typeof options.display === 'function' ? options.display(Math.round(value)) : Math.round(value);
     }
   }
 }
